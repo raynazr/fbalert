@@ -50,16 +50,17 @@ def scrape_marketplace():
 def main():
     seen = load_seen()
     current = scrape_marketplace()
-    new = [entry for entry in current if entry["link"] not in [s["link"] for s in seen]]
+    new = [e for e in current if e["link"] not in [s["link"] for s in seen]]
 
     if new:
-        print(f"Found {len(new)} new listing(s).")
+        print(f"Found {len(new)} new listings.")
         for entry in new:
-            message = f"<b>{entry['title']}</b>\n<a href='{entry['link']}'>View Listing</a>"
+            message = f"<b>{entry['title']}</b><br><a href='{entry['link']}'>View listing</a>"
             send_telegram(message)
         save_seen(current)
     else:
         print("No new listings found.")
+        send_telegram("🚫 No new listings found.")
 
 if __name__ == "__main__":
     main()
