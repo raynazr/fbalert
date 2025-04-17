@@ -41,22 +41,21 @@ def scrape_marketplace():
     listings = []
 
     for item in soup.find_all("a", href=True):
-        if "/marketplace/item/" in item["href"]:
-            link = "https://www.facebook.com" + item["href"]
-            title = item.get_text(strip=True)
+        title = item.text.strip()
+        link = item["href"]
+        if "marketplace" in link and title:
             listings.append({"title": title, "link": link})
-    
     return listings
 
 def main():
     seen = load_seen()
     current = scrape_marketplace()
-    new = [x for x in current if x["link"] not in [s["link"] for s in seen]]
+    new = [entry for entry in current if entry["link"] not in [s["link"] for s in seen]]
 
     if new:
-        print(f"Found {len(new)} new listings.")
+        print(f"Found {len(new)} new listing(s).")
         for entry in new:
-            message = f"🚗 <b>{entry['title']}</b>\n<a href='{entry['link']}'>View Listing</a>"
+            message = f"<b>{entry['title']}</b>\n<a href='{entry['link']}'>View Listing</a>"
             send_telegram(message)
         save_seen(current)
     else:
