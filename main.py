@@ -52,7 +52,7 @@ def scrape_marketplace():
         title = item.get_text(strip=True)
         link = item["href"]
         if "/marketplace/item/" in link and title:
-            listings.append({"title": title, "link": link})
+            listings.append({"title": title, "link": "https://www.facebook.com" + link})
     return listings
 
 def main():
@@ -63,12 +63,12 @@ def main():
     if new:
         print(f"Found {len(new)} new listing(s).")
         for entry in new:
-            message = f"<b>{entry['title']}</b>\n<a href='{entry['link']}'>View Listing</a>"
+            message = f"🚗 <b>{entry['title']}</b>\n👉 <a href='{entry['link']}'>View Listing</a>"
             send_telegram(message)
         save_seen(current)
     else:
         print("No new listings found.")
-        send_telegram("No new listings found.")
+        send_telegram("✅ Triggered: No new listings found. Bot is working.")
 
 if __name__ == "__main__":
     main()
